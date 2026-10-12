@@ -1,0 +1,7 @@
+SpeechRecognition
+gTTS
+pygame
+langchain-groq
+elevenlabs
+PyAudio
+

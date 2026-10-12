@@ -3,22 +3,19 @@ import sys
 import speech_recognition as sr
 from gtts import gTTS
 import pygame
-from config import api_key
 from langchain_groq import ChatGroq 
 from elevenlabs import ElevenLabs
 
 
-
-
-
-# ===============================
 # CONFIG INICIAL
-# ===============================
 
 
-os.environ["GROQ_API_KEY"] = api_key
+api_key = os.environ.get("GROQ_API_KEY")
+elevenlabs_api_key = os.environ.get("ELEVENLABS_API_KEY")
+if not api_key or not elevenlabs_api_key:
+    raise SystemExit("Configure GROQ_API_KEY e ELEVENLABS_API_KEY antes de executar.")
 
-client = ElevenLabs(api_key="")
+client = ElevenLabs(api_key=elevenlabs_api_key)
 AGENT_ID=""
 
 chat = ChatGroq(model="llama-3.1-8b-instant")
@@ -31,9 +28,7 @@ print(f"Bem-vindo senhor Verificado >>> {nome} <<<")
 recognizer = sr.Recognizer()  
 
 
-# ===============================
 # FUNÇÃO PARA GERAR ÁUDIO
-# ===============================
 def cria_audio(texto):
     caminho = "audios/fala.mp3"
 
@@ -66,9 +61,7 @@ def cria_audio(texto):
     pygame.mixer.quit()
 
 
-# ===============================
 # OUVIR MICROFONE 
-# ===============================
 def ouvir_microfone():
     with sr.Microphone(device_index=0, sample_rate=48000) as mic:
         recognizer.adjust_for_ambient_noise(mic, duration=1)
@@ -98,9 +91,7 @@ def ouvir_microfone():
         return ""
 
 
-# ===============================
 # INPUT VIA VOZ
-# ===============================
 def input_voz(prompt=""):
     print(prompt)
     frase = ouvir_microfone()
@@ -108,9 +99,7 @@ def input_voz(prompt=""):
     return frase
 
 
-# ===============================
 # AÇÕES DE SISTEMA
-# ===============================
 def verificar_acao(frase):
     f = frase.lower()
 
@@ -120,15 +109,11 @@ def verificar_acao(frase):
         sys.exit(0)
 
 
-# ===============================
 # BEM-VINDO (fala inicial)
-# ===============================
 cria_audio(f"Olá senhor {nome}, Versão de teste IA")
 
 
-# ===============================
 # LOOP PRINCIPAL
-# ===============================
 historico = []
 
 while True:
@@ -152,4 +137,3 @@ while True:
     cria_audio(resposta)
 
     historico.append(f"{nome}: {pergunta}")
-

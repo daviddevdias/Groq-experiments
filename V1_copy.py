@@ -1,12 +1,9 @@
 import os 
-from config import api_key
-
-from langchain_core.prompts import ChatGroq
+from langchain_groq import ChatGroq
 
 
-
-
-os.environ("GROQ_API_KET") = api_key
+if not os.environ.get("GROQ_API_KEY"):
+    raise SystemExit("Configure GROQ_API_KEY antes de executar.")
 
 chat = ChatGroq(model="llama-3.3-70b-versatile")
 
@@ -20,5 +17,3 @@ print(f"Olá {nome}! Digite 'sair' para encerrar.")
 historico = []
 
 historico
-
-
